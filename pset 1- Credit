@@ -1,0 +1,121 @@
+//This problem set WAS hard. I struggled about 3 days with it. Very worth it at the end, I run across a lot of issues that I learned to solve.
+#include <stdio.h>
+
+bool checksum (long credit_card);
+bool check_american (long credit_card);
+bool check_master (long credit_card);
+bool check_visa (long credit_card);
+
+int main (void)
+{
+    long credit_card = get_long("Input your credit card number:");
+    
+    //Find lenght. Removing every possible digit and keeping a counter of how
+    //many can be taken out (by dividing by 10)
+    
+    int length = 0;
+    long cred_card = credit_card;
+    do
+    {
+        cred_card = cred_card / 10;
+        length++;
+    }
+    while (cred_card > 0);
+    
+    //lengths check
+    //Instead of checking for validity, check for INvalidity. Then you don´t have
+    //to keep the rest of the code inside the if loop.
+    
+    if (length != 13 && length != 15 && length != 16)
+    {
+        printf("INVALID LENGTH \n");
+        return 1;
+    }
+    
+    //I´ve made the checksum a function, to keep main a bit cleaner.
+    //Not necessary at all.
+    if (checksum(credit_card != true))
+    {
+        printf ("Does not pass the checksum \n");
+        return 2;
+        }
+    
+    //Find first two digits. cred_card1 will get digits removed (by diving by ten)
+    //until there´s only two left. 
+    
+    long cred_card1 = credit_card;
+    do
+    {
+        cred_card1 = cred_card1 / 10;
+    }
+    while (cred_card1 > 100);
+    
+    
+    //Check for MasterCard
+    
+    //for some reason, comparing the longs with some hardcoded value always
+    //returns 0. e.g: cred_card1 == 51 is FALSE, even if cred_card1 is 51.
+    //so, i´ve made some calculations that are true only for 51. This has worked,
+    //even though it´s not very easy to write or read. Idk
+    //the cred_card1 checks can be summarized into && ( 1 =< cred_card1%10 =< 5).
+    //but not as understandable as what i´ve written. 
+    
+    if ((cred_card1 / 10 == 5) && (cred_card1%10 == 1 || cred_card1%10 == 2 || 
+        cred_card1%10 == 3 || cred_card1%10 == 4 || cred_card1%10 ==5))
+    {
+        printf("Your card is MASTERCARD \n");
+        return 0;
+    }
+  //Check for American Express
+    if (length == 15 && (cred_card1 == 34 || cred_card1 == 37))
+    {
+        printf("Your card is AMERICAN EXPRESS\n");
+        return 0;
+    }
+    
+    //Check for VISA
+    long first_digit = cred_card1 / 10;
+    
+    if (first_digit == 4 && (length == 13 || length == 16))
+    {
+        printf("Your card is VISA\n");
+        return 0;
+    }
+   
+}
+
+bool checksum (long credit_card)
+{
+    long odd_sum = 0;
+    long other_sum = 0;
+    
+     while (credit_card > 0)
+    {
+        int odd_digit = credit_card%10;
+        
+        odd_sum += odd_digit;
+        
+        credit_card = credit_card/10;
+        
+        
+        int other_digit = credit_card%10;
+        
+        other_sum += other_digit*2;
+        
+        credit_card = credit_card/10;
+    }
+    
+    int total_sum = odd_sum + other_sum;
+    int remain = total_sum%10;
+    bool flag_checksum;
+
+    if (remain == 0)
+    {
+        flag_checksum = true;
+    }
+    else
+    {
+        flag_checksum = false;
+    }
+    return flag_checksum;
+}
