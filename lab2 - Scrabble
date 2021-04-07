@@ -1,0 +1,66 @@
+#include <cs50.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+// Points assigned to each letter of the alphabet
+int POINTS[27] = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
+
+int compute_score(string word);
+
+int get_index (char c);
+
+int main(void)
+{
+  
+    // Get input words from both players
+    string word1 = get_string("Player 1: ");
+    string word2 = get_string("Player 2: ");
+
+    // Score both words
+    int score1 = compute_score(word1);
+    printf("%i is the score of Player 1\n", score1);
+    
+    int score2 = compute_score(word2);
+    printf("%i is the score of Player 2\n", score2);
+
+    // TODO: Print the winner
+    if (score1 > score2)
+    {
+      printf("Player 1 wins \n");
+    }
+    if (score2 > score1)
+    {
+      printf("Player 2 wins \n");
+    }
+    if (score1 == score2)
+    {
+      printf("It´s a tie \n");
+    }
+
+}
+
+
+int compute_score(string word)
+{
+  int total = 0;
+  
+  //loop over every character of the word given by the user
+  for (int i = 0; i < strlen(word); i++)
+  {
+    //make it uppercase (the program has to be case INsensitive)
+    char c = toupper(word[i]);
+    
+    
+    //you can subtract characters using their ASCII values
+    //a is 97, so if I subtract it from whatever letter word[i] is,
+    //i´ll get its appropiate index in the POINTS array
+    
+    //a has a smaller ASCII value than A, so if a user inputs a mayus value
+    //the substraction will not do whats expected. So, you must substract A = 65
+    //So, all the chars have to be uppercase.
+    
+    total = total + POINTS[ c - 65];
+  }
+  return total;
+}
