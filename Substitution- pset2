@@ -1,0 +1,93 @@
+#include <cs50.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+int main(int argc, string argv[])
+{
+    //check that the user input only one cmmd line arg
+    if (argc !=2)
+    {
+        printf("Usage: ./subs key\n");
+        return 1;
+    }
+    //check that the key has the appropiate lenght (26)
+    string key = argv[1];
+    int len = strlen(key);
+    
+    
+    if (len !=  26)
+    {
+        printf("Invalid key\n");
+        return 1;
+    }
+    
+    //check that the key contains every letter, once
+    
+    //loop over every character, and keep that char in a placeholder. then, loop
+    //over every char again, and compare it againts the placeholder. keep a track
+    //of how many matches there where. if it´s more than one (the character will
+    //check against itself once), return 1.
+    
+    for (int i = 0; i < len; i++) //loop over every character
+    {
+    
+        int matches = 0; //keep track of matches
+        
+        for (int o = 0; o < len; o++)   //loop over every char again
+        
+        {
+            if (key[i] == key[o])    //compare the chars
+            {
+                matches++;   //if they are the same, add one to matches
+            }
+        }
+        
+        if (matches > 1)
+        {
+            printf("The letters on the key can't repeat themselves\n");
+            return 1;
+        }
+    }
+    
+    //check that the key is 100% made up of letters
+    for (int i = 0; i < len; i++)
+    {
+        if (isalpha(key[i]) == 0)
+        {
+            printf("Only letters. No numbers\n");
+            return 1;
+        }
+    }
+    
+    //now, ask user for plaintext
+    
+    string plaintext = get_string("Input plaintext...");
+    int plain_len = strlen(plaintext);
+    
+    
+   
+    for (int i = 0; i < plain_len; i++)
+    {
+        char char_plain = plaintext[i];
+        
+        if (isupper(char_plain))
+        {
+            int index = char_plain - 65;
+            char sub_text = key[index];
+            plaintext[i] = toupper(sub_text);
+        }
+        else if (islower(char_plain))
+        {
+            int index = char_plain - 97;
+            char sub_text = key[index];
+            plaintext[i] = tolower(sub_text);
+        }
+        else 
+        {
+            plaintext[i] = plaintext[i];
+        }
+    }
+    printf("chipertext: %s\n", plaintext);
+}
